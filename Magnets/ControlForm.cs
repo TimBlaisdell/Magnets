@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 using Utilities;
 
@@ -21,39 +20,42 @@ namespace Magnets {
             _magform.BaseRotation = Settings.Get<double>("BaseRotation");
             txtBaseRotation.Text = _magform.BaseRotation.ToString();
             _magform.TargetColor = Color.FromArgb(colorvals[0], colorvals[1], colorvals[2]);
-            _magform.MouseEnter += (sender, args) => {
-                                       var p1 = _magform.PointToClient(MousePosition);
-                                       var p2 = _magform.ScreenPointToImage(p1);
-                                       p1 = new Point((int) Math.Round(p2.X), (int) Math.Round(p2.Y));
-                                       lblMouseLoc.Text = "(" + p1.X + ", " + p1.Y + ")";
-                                       _magform.Tag = p1;
-                                       lblMouseLoc.Visible = true;
-                                   };
-            _magform.MouseLeave += (sender, args) => lblMouseLoc.Visible = false;
-            _magform.MouseMove += (sender, args) => {
-                                      var p1 = _magform.PointToClient(MousePosition);
-                                      var p2 = _magform.ScreenPointToImage(p1);
-                                      p1 = new Point((int) Math.Round(p2.X), (int) Math.Round(p2.Y));
-                                      _magform.Tag = p1;
-                                      lblMouseLoc.Text = "(" + p1.X + ", " + p1.Y + ")";
-                                  };
+            //_magform.MouseEnter += (sender, args) => {
+            //                           var p1 = _magform.PointToClient(MousePosition);
+            //                           var p2 = _magform.ScreenPointToImage(new PointD(p1));
+            //                           p1 = new Point((int) Math.Round(p2.X), (int) Math.Round(p2.Y));
+            //                           lblMouseLoc.Text = "(" + p1.X + ", " + p1.Y + ")";
+            //                           _magform.Tag = p1;
+            //                           lblMouseLoc.Visible = true;
+            //                       };
+            //_magform.MouseLeave += (sender, args) => lblMouseLoc.Visible = false;
+            //_magform.MouseMove += (sender, args) => {
+            //                          var p1 = _magform.PointToClient(MousePosition);
+            //                          var p2 = _magform.ScreenPointToImage(new PointD(p1));
+            //                          p1 = new Point((int) Math.Round(p2.X), (int) Math.Round(p2.Y));
+            //                          _magform.Tag = p1;
+            //                          lblMouseLoc.Text = "(" + p1.X + ", " + p1.Y + ")";
+            //                      };
             _magform.MagnetsChanged += (sender, args) => PopulateMagnetTable();
-            _magform.SelectedMagnetChanged += (sender, args) => {
-                                                  if (_magform.SelectedMagnet == null) return;
-                                                  foreach (DataGridViewRow row in dgvMagnets.Rows) {
-                                                      if (ReferenceEquals(_magform.SelectedMagnet, row.Tag)) {
-                                                          row.Selected = true;
-                                                          break;
-                                                      }
-                                                  }
-                                              };
+            //_magform.SelectedMagnetChanged += (sender, args) => {
+            //                                      if (_magform.SelectedMagnet == null) return;
+            //                                      foreach (DataGridViewRow row in dgvMagnets.Rows) {
+            //                                          if (ReferenceEquals(_magform.SelectedMagnet, row.Tag)) {
+            //                                              row.Selected = true;
+            //                                              break;
+            //                                          }
+            //                                      }
+            //                                  };
         }
         private void btnCleanup_Click(object sender, EventArgs e) {
-            _magform.InvalidateRect(new RectangleF(0, 0, _magform.ImageSize.Width, _magform.ImageSize.Height));
+            _magform.InvalidateRect(new RectangleD(0, 0, _magform.ImageSize.Width, _magform.ImageSize.Height));
         }
         private void btnReset_Click(object sender, EventArgs e) {
             txtInitLoc_TextChanged(txtInitLoc, null);
             txtInitLoc_TextChanged(txtInitVel, null);
+            for (int r = 0; r < dgvMagnets.RowCount; ++r) {
+                dgvMagnets_CellValueChanged(dgvMagnets, new DataGridViewCellEventArgs(0, r));
+            }
             _magform.ClearPath();
         }
         private void btnStart_Click(object sender, EventArgs e) {
@@ -74,6 +76,12 @@ namespace Magnets {
                 Settings.Values["TargetColor"] = new double[] {colorDialog.Color.R, colorDialog.Color.G, colorDialog.Color.B};
             }
         }
+        private void chkShowMoving_CheckedChanged(object sender, EventArgs e) {
+            _magform.ShowMovingMagnet = chkShowMoving.Checked;
+        }
+        private void chkShowStationary_CheckedChanged(object sender, EventArgs e) {
+            _magform.ShowStationaryMagnets = chkShowStationary.Checked;
+        }
         private void ControlForm_Shown(object sender, EventArgs e) {
             _magform.Show();
             _magform.Location = new Point(Right, Top);
@@ -91,7 +99,7 @@ namespace Magnets {
                 double d;
                 if (!double.TryParse((string) cell.Value, out d)) return;
                 _magform.InvalidateRect(mag.Rect);
-                mag.Diameter = d;
+                //mag.Diameter = d;
                 _magform.InvalidateRect(mag.Rect);
             }
             else if (e.ColumnIndex == colForceMag.Index) {
@@ -104,26 +112,25 @@ namespace Magnets {
                 if (string.IsNullOrEmpty(val)) return;
                 val = val.Trim('(', ')');
                 string[] vals = val.Split(',');
-                float x, y;
-                if (vals.Length != 2 || !float.TryParse(vals[0], out x) || !float.TryParse(vals[1], out y)) return;
+                double x, y;
+                if (vals.Length != 2 || !double.TryParse(vals[0], out x) || !double.TryParse(vals[1], out y)) return;
                 _magform.InvalidateRect(mag.Rect);
-                mag.Location = new PointF(x, y);
+                mag.Location = new PointD(x, y);
                 _magform.InvalidateRect(mag.Rect);
             }
             Settings.Values["Magnets"] = _magform.StationaryMagnets.Select(m => m.ToString()).ToArray();
         }
-        private void lblMouseLoc_TextChanged(object sender, EventArgs e) {
-            lblMouseLoc.Left = dgvMagnets.Right - lblMouseLoc.Width;
-        }
+        //private void lblMouseLoc_TextChanged(object sender, EventArgs e) {
+        //    lblMouseLoc.Left = dgvMagnets.Right - lblMouseLoc.Width;
+        //}
         private void numForceMultiplier_ValueChanged(object sender, EventArgs e) {
             Magnet.ForceMultiplier = (int) numForceMultiplier.Value;
             Settings.Values["ForceMultiplier"] = (int) numForceMultiplier.Value;
         }
-        private readonly Random _rand = new Random();
         private void timerMagInfo_Tick(object sender, EventArgs e) {
             var mag = _magform.Magnet;
             double vel = Math.Round(Math.Sqrt(Math.Pow(mag.Velocity.X, 2) + Math.Pow(mag.Velocity.Y, 2)), 3);
-            PointF p = new PointF((float) Math.Round(mag.Location.X, 2), (float) Math.Round(mag.Location.Y, 2));
+            PointD p = new PointD(Math.Round(mag.Location.X, 2), Math.Round(mag.Location.Y, 2));
             lblVelocity.Text = vel.ToString();
             lblLocation.Text = $"({p.X}, {p.Y})";
             if (chkCycleColors.Checked) {
@@ -132,6 +139,17 @@ namespace Magnets {
                     _magform.TargetColor = c;
                     btnTargetColor.BackColor = c;
                 }
+            }
+        }
+        private void trackFriction_Scroll(object sender, EventArgs e) {
+            lblFriction.Text = "Friction: " + trackFriction.Value;
+            _magform.Friction = trackFriction.Value;
+        }
+        private void txtBaseRotation_TextChanged(object sender, EventArgs e) {
+            double d;
+            if (double.TryParse(txtBaseRotation.Text, out d)) {
+                Settings.Values["BaseRotation"] = d;
+                _magform.BaseRotation = d;
             }
         }
         private void txtInitLoc_TextChanged(object sender, EventArgs e) {
@@ -143,11 +161,11 @@ namespace Magnets {
             float x, y;
             if (!float.TryParse(vals[0], out x) || !float.TryParse(vals[1], out y)) return;
             if (ReferenceEquals(txtbox, txtInitLoc)) {
-                _magform.InitializeMagnet(new PointF(x, y), _magform.Magnet.Velocity);
+                _magform.InitializeMagnet(new PointD(x, y), _magform.Magnet.Velocity);
                 Settings.Values["InitialLocation"] = txtInitLoc.Text;
             }
             else {
-                _magform.InitializeMagnet(_magform.Magnet.Location, new PointF(x, y));
+                _magform.InitializeMagnet(_magform.Magnet.Location, new PointD(x, y));
                 Settings.Values["InitialVelocity"] = txtInitVel.Text;
             }
         }
@@ -162,25 +180,6 @@ namespace Magnets {
             }
         }
         private readonly MagnetsForm _magform;
-
-        private void chkShowStationary_CheckedChanged(object sender, EventArgs e) {
-            _magform.ShowStationaryMagnets = chkShowStationary.Checked;
-        }
-
-        private void chkShowMoving_CheckedChanged(object sender, EventArgs e) {
-            _magform.ShowMovingMagnet = chkShowMoving.Checked;
-        }
-
-        private void txtBaseRotation_TextChanged(object sender, EventArgs e) {
-            double d;
-            if (double.TryParse(txtBaseRotation.Text, out d)) {
-                Settings.Values["BaseRotation"] = d;
-                _magform.BaseRotation = d;
-            }
-        }
-
-        private void chkCycleColors_CheckedChanged(object sender, EventArgs e) {
-
-        }
+        private readonly Random _rand = new Random();
     }
 }

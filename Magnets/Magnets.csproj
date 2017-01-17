@@ -59,13 +59,25 @@
       <DependentUpon>MagnetsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Magnet.cs" />
+    <Compile Include="MouseTracker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MouseTracker.Designer.cs">
+      <DependentUpon>MouseTracker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PointD.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RectangleD.cs" />
+    <Compile Include="SizeD.cs" />
     <EmbeddedResource Include="ControlForm.resx">
       <DependentUpon>ControlForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MagnetsForm.resx">
       <DependentUpon>MagnetsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MouseTracker.resx">
+      <DependentUpon>MouseTracker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -75,6 +87,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -98,6 +111,15 @@
       <Project>{9cd14116-8dad-4325-9b3a-93c47113cd27}</Project>
       <Name>Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\blue magnet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\red magnet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\white magnet.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

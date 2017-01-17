@@ -37,7 +37,6 @@
             this.colLocation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDiameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colForceMag = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lblMouseLoc = new System.Windows.Forms.Label();
             this.lblInfo = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblVelocityLabel = new System.Windows.Forms.Label();
@@ -53,8 +52,11 @@
             this.lblBaseRotation = new System.Windows.Forms.Label();
             this.txtBaseRotation = new System.Windows.Forms.TextBox();
             this.chkCycleColors = new System.Windows.Forms.CheckBox();
+            this.trackFriction = new System.Windows.Forms.TrackBar();
+            this.lblFriction = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numForceMultiplier)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMagnets)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackFriction)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStart
@@ -204,18 +206,6 @@
             this.colForceMag.Name = "colForceMag";
             this.colForceMag.Width = 82;
             // 
-            // lblMouseLoc
-            // 
-            this.lblMouseLoc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblMouseLoc.AutoSize = true;
-            this.lblMouseLoc.Location = new System.Drawing.Point(212, 233);
-            this.lblMouseLoc.Name = "lblMouseLoc";
-            this.lblMouseLoc.Size = new System.Drawing.Size(31, 13);
-            this.lblMouseLoc.TabIndex = 5;
-            this.lblMouseLoc.Text = "(0, 0)";
-            this.lblMouseLoc.Visible = false;
-            this.lblMouseLoc.TextChanged += new System.EventHandler(this.lblMouseLoc_TextChanged);
-            // 
             // lblInfo
             // 
             this.lblInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -283,6 +273,7 @@
             // 
             // btnTargetColor
             // 
+            this.btnTargetColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnTargetColor.Location = new System.Drawing.Point(333, 68);
             this.btnTargetColor.Name = "btnTargetColor";
             this.btnTargetColor.Size = new System.Drawing.Size(23, 23);
@@ -358,7 +349,29 @@
             this.chkCycleColors.TabIndex = 9;
             this.chkCycleColors.Text = "Cycle colors";
             this.chkCycleColors.UseVisualStyleBackColor = true;
-            this.chkCycleColors.CheckedChanged += new System.EventHandler(this.chkCycleColors_CheckedChanged);
+            // 
+            // trackFriction
+            // 
+            this.trackFriction.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackFriction.Location = new System.Drawing.Point(260, 133);
+            this.trackFriction.Maximum = 100;
+            this.trackFriction.Name = "trackFriction";
+            this.trackFriction.Size = new System.Drawing.Size(104, 45);
+            this.trackFriction.TabIndex = 10;
+            this.trackFriction.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackFriction.Visible = false;
+            this.trackFriction.Scroll += new System.EventHandler(this.trackFriction_Scroll);
+            // 
+            // lblFriction
+            // 
+            this.lblFriction.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblFriction.AutoSize = true;
+            this.lblFriction.Location = new System.Drawing.Point(260, 117);
+            this.lblFriction.Name = "lblFriction";
+            this.lblFriction.Size = new System.Drawing.Size(53, 13);
+            this.lblFriction.TabIndex = 6;
+            this.lblFriction.Text = "Friction: 0";
+            this.lblFriction.Visible = false;
             // 
             // ControlForm
             // 
@@ -375,8 +388,8 @@
             this.Controls.Add(this.lblVelocity);
             this.Controls.Add(this.lblLocationLabel);
             this.Controls.Add(this.lblVelocityLabel);
+            this.Controls.Add(this.lblFriction);
             this.Controls.Add(this.lblInfo);
-            this.Controls.Add(this.lblMouseLoc);
             this.Controls.Add(this.dgvMagnets);
             this.Controls.Add(this.txtInitVel);
             this.Controls.Add(this.lblInitVel);
@@ -389,11 +402,13 @@
             this.Controls.Add(this.btnCleanup);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnStart);
+            this.Controls.Add(this.trackFriction);
             this.Name = "ControlForm";
             this.Text = "ControlForm";
             this.Shown += new System.EventHandler(this.ControlForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.numForceMultiplier)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMagnets)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackFriction)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -414,7 +429,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colLocation;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDiameter;
         private System.Windows.Forms.DataGridViewTextBoxColumn colForceMag;
-        private System.Windows.Forms.Label lblMouseLoc;
         private System.Windows.Forms.Label lblInfo;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblVelocityLabel;
@@ -430,5 +444,7 @@
         private System.Windows.Forms.Label lblBaseRotation;
         private System.Windows.Forms.TextBox txtBaseRotation;
         private System.Windows.Forms.CheckBox chkCycleColors;
+        private System.Windows.Forms.TrackBar trackFriction;
+        private System.Windows.Forms.Label lblFriction;
     }
 }

@@ -33,6 +33,7 @@
             this.menuLoadMagnets = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.menuEditMagnet = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,38 +51,47 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuRemoveSelectedMagnet,
             this.menuAddMagnetHere,
+            this.menuEditMagnet,
             this.menuSaveMagnets,
             this.menuLoadMagnets});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(208, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(195, 114);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // menuRemoveSelectedMagnet
             // 
             this.menuRemoveSelectedMagnet.Name = "menuRemoveSelectedMagnet";
-            this.menuRemoveSelectedMagnet.Size = new System.Drawing.Size(207, 22);
-            this.menuRemoveSelectedMagnet.Text = "Remove selected magnet";
+            this.menuRemoveSelectedMagnet.Size = new System.Drawing.Size(194, 22);
+            this.menuRemoveSelectedMagnet.Text = "Remove this magnet";
             this.menuRemoveSelectedMagnet.Click += new System.EventHandler(this.menuRemoveSelectedMagnet_Click);
             // 
             // menuAddMagnetHere
             // 
             this.menuAddMagnetHere.Name = "menuAddMagnetHere";
-            this.menuAddMagnetHere.Size = new System.Drawing.Size(207, 22);
+            this.menuAddMagnetHere.Size = new System.Drawing.Size(194, 22);
             this.menuAddMagnetHere.Text = "Add magnet here";
             this.menuAddMagnetHere.Click += new System.EventHandler(this.menuAddMagnetHere_Click);
             // 
             // menuSaveMagnets
             // 
             this.menuSaveMagnets.Name = "menuSaveMagnets";
-            this.menuSaveMagnets.Size = new System.Drawing.Size(207, 22);
+            this.menuSaveMagnets.Size = new System.Drawing.Size(194, 22);
             this.menuSaveMagnets.Text = "Save magnets...";
             this.menuSaveMagnets.Click += new System.EventHandler(this.menuSaveMagnets_Click);
             // 
             // menuLoadMagnets
             // 
             this.menuLoadMagnets.Name = "menuLoadMagnets";
-            this.menuLoadMagnets.Size = new System.Drawing.Size(207, 22);
+            this.menuLoadMagnets.Size = new System.Drawing.Size(194, 22);
             this.menuLoadMagnets.Text = "Load magnets...";
             this.menuLoadMagnets.Click += new System.EventHandler(this.menuLoadMagnets_Click);
+            // 
+            // menuEditMagnet
+            // 
+            this.menuEditMagnet.Name = "menuEditMagnet";
+            this.menuEditMagnet.Size = new System.Drawing.Size(194, 22);
+            this.menuEditMagnet.Text = "Edit magnet properties";
+            this.menuEditMagnet.Click += new System.EventHandler(this.menuEditMagnet_Click);
             // 
             // MagnetsForm
             // 
@@ -90,12 +100,18 @@
             this.ClientSize = new System.Drawing.Size(784, 762);
             this.ContextMenuStrip = this.contextMenuStrip1;
             this.ControlBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MagnetsForm";
-            this.Text = "MagnetsForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.Shown += new System.EventHandler(this.MagnetsForm_Shown);
             this.SizeChanged += new System.EventHandler(this.MagnetsForm_SizeChanged);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MagnetsForm_MouseDown);
+            this.MouseEnter += new System.EventHandler(this.MagnetsForm_MouseEnter);
+            this.MouseLeave += new System.EventHandler(this.MagnetsForm_MouseLeave);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MagnetsForm_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MagnetsForm_MouseUp);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -113,6 +129,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuLoadMagnets;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.ToolStripMenuItem menuEditMagnet;
     }
 }
 
