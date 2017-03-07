@@ -158,8 +158,8 @@ namespace Magnets {
             if (!txtbox.Text.StartsWith("(") || !txtbox.Text.EndsWith(")")) return;
             string[] vals = txtbox.Text.Substring(1, txtbox.Text.Length - 2).Split(',');
             if (vals.Length != 2) return;
-            float x, y;
-            if (!float.TryParse(vals[0], out x) || !float.TryParse(vals[1], out y)) return;
+            double x, y;
+            if (!double.TryParse(vals[0], out x) || !double.TryParse(vals[1], out y)) return;
             if (ReferenceEquals(txtbox, txtInitLoc)) {
                 _magform.InitializeMagnet(new PointD(x, y), _magform.Magnet.Velocity);
                 Settings.Values["InitialLocation"] = txtInitLoc.Text;
@@ -178,6 +178,9 @@ namespace Magnets {
                 dgvMagnets.Rows[r].Cells[colLocation.Index].Value = $"({mag.Location.X}, {mag.Location.Y})";
                 dgvMagnets.Rows[r].Tag = mag;
             }
+            txtInitLoc.Text = _magform.InitLocation.ToString();
+            txtInitVel.Text = _magform.InitVelocity.ToString();
+            numForceMultiplier.Value = (int) Magnet.ForceMultiplier;
         }
         private readonly MagnetsForm _magform;
         private readonly Random _rand = new Random();

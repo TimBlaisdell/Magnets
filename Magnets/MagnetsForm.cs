@@ -183,6 +183,7 @@ namespace Magnets {
             }
         }
         private void MagnetsForm_Shown(object sender, EventArgs e) {
+            timerCleanup.Start();
             //var f = new MouseTracker(this);
             //f.Location = new Point(0, 0);
             //f.Show();
@@ -210,14 +211,18 @@ namespace Magnets {
         private void menuLoadMagnets_Click(object sender, EventArgs e) {
             if (openFileDialog.ShowDialog() == DialogResult.OK) {
                 string text = File.ReadAllText(openFileDialog.FileName);
-                JSONArray json = new JSONArray(text);
+                var jobj = new JSONObject(text);
+                InitLocation = PointD.Parse(jobj.getString("InitialLocation"));
+                InitVelocity = PointD.Parse(jobj.getString("InitialVelocity"));
+                Magnet.ForceMultiplier = double.Parse(jobj.optString("ForceMultiplier", jobj.optString("ForceMultipler", "1"))); // because I'd misspelled it orignally.
+                JSONArray json = jobj.getJSONArray("Magnets");
                 _stationaryMags.Clear();
-                var mag = Magnet.FromString(json.getString(0));
-                Magnet.Location = mag.Location;
-                Magnet.Velocity = mag.Velocity;
+                //var mag = Magnet.FromString(json.getString(0));
+                Magnet.Location = InitLocation;
+                Magnet.Velocity = InitVelocity;
                 //Magnet.Color = mag.Color;
                 //Magnet.Diameter = mag.Diameter;
-                Magnet.Force = mag.Force;
+                //Magnet.Force = mag.Force;
                 for (int i = 1; i < json.Count; ++i) {
                     _stationaryMags.Add(Magnet.FromString(json.getString(i)));
                 }
@@ -236,10 +241,15 @@ namespace Magnets {
         }
         private void menuSaveMagnets_Click(object sender, EventArgs e) {
             if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+                var jobj = new JSONObject();
+                jobj.put("InitialLocation", InitLocation.ToString());
+                jobj.put("InitialVelocity", InitVelocity.ToString());
+                jobj.put("ForceMultiplier", Magnet.ForceMultiplier.ToString());
                 var json = new JSONArray();
                 json.put(Magnet.ToString());
                 foreach (var mag in _stationaryMags) json.put(mag.ToString());
-                File.WriteAllText(saveFileDialog.FileName, json.ToString());
+                jobj.put("Magnets", json);
+                File.WriteAllText(saveFileDialog.FileName, jobj.ToString());
             }
         }
         private void MouseTrackerOnValueChanged(object sender, EventArgs eventArgs) {
@@ -279,6 +289,8 @@ namespace Magnets {
             Magnet.Location = loc;
             InvalidateRect(Magnet.Rect);
             Magnet.Velocity = vel;
+            InitLocation = loc;
+            InitVelocity = vel;
         }
         public void InvalidateRect() {
             InvalidateRect(new RectangleD(0, 0, _imageSize.Width, _imageSize.Height));
@@ -292,7 +304,6 @@ namespace Magnets {
             //}
             Invalidate();
         }
-        private readonly List<RectangleD> _invalidRects = new List<RectangleD>();
         public PointD ScreenPointToImage(PointD p) {
             double scaleX = (double) _imageSize.Width / ClientRectangle.Width;
             double scaleY = (double) _imageSize.Height / ClientRectangle.Height;
@@ -373,5 +384,11 @@ namespace Magnets {
         private bool _showMovingMagnet = true;
         private bool _showStationaryMagnets = true;
         private readonly List<Magnet> _stationaryMags = new List<Magnet>();
+        public PointD InitLocation { get; private set; }
+        public PointD InitVelocity { get; private set; }
+
+        private void timerCleanup_Tick(object sender, EventArgs e) {
+            InvalidateRect(new RectangleD(0, 0, ImageSize.Width, ImageSize.Height));
+        }
     }
 }

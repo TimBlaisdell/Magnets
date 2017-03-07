@@ -77,7 +77,7 @@ namespace Magnets {
             }
         }
         public PointD Velocity { get; set; }
-        public static double ForceMultiplier { get; set; } = 0.1;
+        public static double ForceMultiplier { get; set; } = 1;
         public double DistanceFrom(PointD p) {
             return Math.Sqrt(Math.Pow(p.X - Location.X, 2) + Math.Pow(p.Y - Location.Y, 2));
         }
@@ -109,7 +109,7 @@ namespace Magnets {
         }
         public static Magnet FromString(string s) {
             string[] strs = s.Split(',').Select(ss => ss.Trim('(', ')', '[', ']', ' ')).ToArray();
-            if (strs.Length != 4) throw new Exception("Invalid strring in Magnet.FromString");
+            if (strs.Length < 4) throw new Exception("Invalid strring in Magnet.FromString");
             return new Magnet(new PointD(double.Parse(strs[0]), double.Parse(strs[1])),
                               double.Parse(strs[2]));
             //Color.FromArgb(int.Parse(strs[4]), int.Parse(strs[5]), int.Parse(strs[6])));

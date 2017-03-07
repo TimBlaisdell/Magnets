@@ -8,6 +8,6 @@ namespace Magnets {
         }
         public double Width;
         public double Height;
-        public override string ToString() => $"{Width}, {Height})";
+        public override string ToString() => $"{Width}, {Height})"; 
     }
 }
